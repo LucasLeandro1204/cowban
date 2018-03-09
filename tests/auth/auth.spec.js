@@ -73,7 +73,7 @@ describe('Auth @auth', () => {
   });
 
   it('it should allow access if a valid token is provided', async () => {
-    const user = User.query().first();
+    const user = await User.query().first();
     const token = JWT(user);
 
     const res = await request()
