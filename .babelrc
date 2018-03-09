@@ -1,0 +1,23 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": "current"
+      }
+    }]
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    ["module-resolver", {
+      "root": ["./src"],
+      "alias": {
+        "@": "./",
+        "app": "./src/app",
+        "auth": "./src/auth",
+        "core": "./src/core",
+        "model": "./src/model",
+        "support": "./src/support"
+      }
+    }]
+  ]
+}
