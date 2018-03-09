@@ -30,6 +30,7 @@ module.exports = {
     },
 
     mysql: {
+      client: 'mysql',
       migrations: {
         directory: 'database/migrations',
       },
