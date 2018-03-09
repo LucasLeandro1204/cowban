@@ -1,10 +1,7 @@
 import Knex from 'core/knex';
 
 const rollback = (done = () => {}) => (
-  Knex.migrate.rollback()
-    .then(() => Knex.migrate.latest())
-    .then(() => Knex.seed.run())
-    .then(() => done())
+  Knex.seed.run() // because seed already drops the data before run xd
 );
 
 const wrap = fn => (req, res, next) => fn(req, res, next).catch(next);
