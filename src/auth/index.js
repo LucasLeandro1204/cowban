@@ -1,11 +1,8 @@
 import JWT from 'core/jwt';
-import { Router } from 'express';
 import Controller from 'auth/controller';
 
-const router = Router();
+Controller
+  .get('/ping', 'ping')
+  .post('/login', 'login');
 
-router.post('/login', Controller.login());
-
-router.get('/ping', Controller.ping());
-
-export default router;
+export default Controller.setup();

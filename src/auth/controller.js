@@ -2,12 +2,13 @@ import JWT from 'core/jwt';
 import Hash from 'core/hash';
 import User from 'model/user';
 import { wrap } from 'support/helpers';
+import Controller from 'core/controller';
 import { schema } from 'support/helpers';
 import Authenticated from 'auth/middleware';
 import { AuthenticationError } from 'auth/errors';
 
-class AuthController {
-  static login () {
+class AuthController extends Controller {
+  login () {
     return [
       schema({
         email: {
@@ -37,22 +38,19 @@ class AuthController {
           return res.json({
             token: JWT(user),
           });
-        }
-        catch (e) {
+        } catch (e) {
           throw new AuthenticationError;
         }
       }),
     ];
   }
 
-  static ping () {
+  ping () {
     return [
       Authenticated,
-      (req, res) => {
-        res.send('Pong!');
-      },
+      (req, res) => res.send('Pong!'),
     ];
   }
 };
 
-export default AuthController;
+export default new AuthController();
