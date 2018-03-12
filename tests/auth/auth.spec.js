@@ -93,6 +93,6 @@ describe('Auth @auth', () => {
 
 
     expect(res).to.have.status(200);
-    expect(res).to.have.headers('token');
+    expect(res).to.have.header('token');
   });
 });
