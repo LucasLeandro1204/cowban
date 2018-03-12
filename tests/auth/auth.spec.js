@@ -8,7 +8,7 @@ describe('Auth @auth', () => {
 
   it('it should deny access', async () => {
     try {
-      await request().get('/auth/ping');
+      await request().get('/api/auth/ping');
     } catch (err) {
       expect(err).to.have.status(401);
     }
@@ -17,7 +17,7 @@ describe('Auth @auth', () => {
   it('it should fail if user not found', async () => {
     try {
       await request()
-        .post('/auth/login')
+        .post('/api/auth/login')
         .send({
           email: 'foo@foo.com',
           password: 'foo123',
@@ -28,12 +28,12 @@ describe('Auth @auth', () => {
     }
   });
 
-  it('it should fail if password doest not match', async () => {
+  it('it should fail if password does not match', async () => {
     const { email } = await User.query().first();
 
     try {
       await request()
-        .post('/auth/login')
+        .post('/api/auth/login')
         .send({
           email,
           password: 'foo123',
@@ -52,7 +52,7 @@ describe('Auth @auth', () => {
     });
 
     const res = await request()
-      .post('/auth/login')
+      .post('/api/auth/login')
       .send({
         email: 'foo@bar.com',
         password: 'foo123',
@@ -65,7 +65,7 @@ describe('Auth @auth', () => {
   it('it should deny access if an invalid token is provided', async () => {
     try {
       await request()
-        .get('/auth/ping')
+        .get('/api/auth/ping')
         .set('Authorization', 'Bearer foobarbaz');
     } catch (err) {
       expect(err).to.have.status(401);
@@ -77,7 +77,7 @@ describe('Auth @auth', () => {
     const token = JWT(user);
 
     const res = await request()
-      .get('/auth/ping')
+      .get('/api/auth/ping')
       .set('Authorization', 'Bearer ' + token);
 
     expect(res).to.have.status(200);
