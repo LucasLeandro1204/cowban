@@ -1,6 +1,6 @@
-import Config from 'config';
 import JWT from 'express-jwt';
-import jwt from 'core/jwt';
+import Config from 'config';
+import CoreJWT from 'core/jwt';
 
 export default [
 	JWT({
@@ -12,7 +12,7 @@ export default [
   	},
 	}),
 	(req, res, next) => {
-		const token = jwt(req.user);
+		const token = CoreJWT(req.user);
 
 		res.set('token', token);
 
