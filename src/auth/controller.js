@@ -3,53 +3,28 @@ import Hash from 'core/hash';
 import User from 'model/user';
 import { wrap } from 'support/helpers';
 import Controller from 'core/controller';
-import { schema } from 'support/helpers';
-import Authenticated from 'auth/middleware';
-import { AuthenticationError } from 'auth/errors';
 
 class AuthController extends Controller {
   login () {
-    return [
-      schema({
-        email: {
-          in: ['body'],
-          exists: true,
-          isEmail: true,
-          errorMessage: 'Email field is required and should be valid',
-        },
-        password: {
-          in: ['body'],
-          exists: true,
-          errorMessage: 'Password field is required',
-        },
-      }),
-      wrap(async ({ validated: { email, password } }, res) => {
-        try {
-          const user = await User.query().findOne({
-            email,
-          }).throwIfNotFound();
+    return wrap(async ({ validated: { email, password } }, res) => {
+      const user = await User.query().findOne({
+        email,
+      }).throwIfNotFound();
 
-          const valid = await Hash.compare(password, user.password);
+      const valid = await Hash.compare(password, user.password);
 
-          if (! valid) {
-            throw new Error('Password does not match');
-          }
+      if (! valid) {
+        throw new Error('Password does not match');
+      }
 
-          return res.json({
-            token: JWT(user),
-          });
-        } catch (e) {
-          throw new AuthenticationError;
-        }
-      }),
-    ];
+      return res.json({
+        token: JWT(user),
+      });
+    });
   }
 
   ping () {
-    return [
-      Authenticated,
-      (req, res) => res.send('Pong!'),
-    ];
+    return (req, res) => res.send('Pong!');
   }
 };
 
