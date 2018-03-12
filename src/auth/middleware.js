@@ -1,5 +1,5 @@
-import JWT from 'express-jwt';
 import Config from 'config';
+import JWT from 'express-jwt';
 import CoreJWT from 'core/jwt';
 
 export default [
