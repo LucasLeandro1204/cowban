@@ -11,9 +11,11 @@ export default [
     	return splited[0] === 'Bearer' ? splited[1] : null;
   	},
 	}),
-	(req, res) => {
+	(req, res, next) => {
 		const token = jwt(req.user);
 
-    res.send({ token });
+		res.set('token', token);
+
+    next();
   },
 ];

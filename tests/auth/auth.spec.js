@@ -91,7 +91,8 @@ describe('Auth @auth', () => {
       .get('/api/auth/ping')
       .set('Authorization', 'Bearer ' + token);
 
+
     expect(res).to.have.status(200);
-    expect(res.body).to.have.property('token');
+    expect(res.headers).to.have.property('token');
   });
 });
