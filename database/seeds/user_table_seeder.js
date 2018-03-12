@@ -6,7 +6,7 @@ exports.seed = knex => (
     .then(() => (
       knex('users').insert([
         {
-          password: 'foo@123',
+          password: bcrypt.hashSync('foo@123', config.get('hash.rounds')),
           name: 'Lucas Leandro',
           email: 'lucas@leandro.com',
           created_at: new Date(),

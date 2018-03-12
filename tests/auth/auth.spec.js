@@ -1,4 +1,5 @@
 import JWT from 'core/jwt';
+import Hash from 'core/hash';
 import User from 'model/user';
 import { rollback } from 'support/helpers';
 import { request, expect } from 'support/chai';
@@ -26,7 +27,9 @@ describe('Auth @auth', () => {
     }
   });
 
-  it('it should fail if user not found', async () => {
+  it('it should fail if user not found or password does not match', async () => {
+    const { email } = await User.query().first();
+
     try {
       await request()
         .post('/api/auth/login')
@@ -38,10 +41,6 @@ describe('Auth @auth', () => {
       expect(res).to.have.status(401);
       expect(res.body.message).to.be.equals('User not found or password does not match');
     }
-  });
-
-  it('it should fail if password does not match', async () => {
-    const { email } = await User.query().first();
 
     try {
       await request()
@@ -50,25 +49,25 @@ describe('Auth @auth', () => {
           email,
           password: 'foo123',
         });
-    } catch (err) {
-      expect(err).to.have.status(401);
-      expect(err.message).to.be.equals("User not found or password does not match");
+    } catch ({ response: res }) {
+      expect(res).to.have.status(401);
+      expect(res.body.message).to.be.equals('User not found or password does not match');
     }
   });
 
-  it('it should pass if user and password is ok', async () => {
+  it('it should pass if found user and password match', async () => {
     const user = await User.query().insert({
       name: 'Foo bar',
-      password: 'foo123',
       email: 'foo@bar.com',
+      password: await Hash.encrypt('foo123'),
     });
 
     const res = await request()
-      .post('/api/auth/login')
-      .send({
-        email: 'foo@bar.com',
-        password: 'foo123',
-      });
+    .post('/api/auth/login')
+    .send({
+      email: 'foo@bar.com',
+      password: 'foo123',
+    });
 
     expect(res).to.have.status(200);
     expect(res.body).to.have.property('token');
