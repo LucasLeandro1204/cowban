@@ -34,9 +34,9 @@ describe('Auth @auth', () => {
           email: 'foo@foo.com',
           password: 'foo123',
         });
-    } catch (err) {
-      expect(err).to.have.status(401);
-      expect(err.message).to.be.equals("User not found or password doesn't match");
+    } catch ({ response: res }) {
+      expect(res).to.have.status(401);
+      expect(res.body.message).to.be.equals('User not found or password does not match');
     }
   });
 
