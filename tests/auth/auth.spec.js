@@ -14,6 +14,18 @@ describe('Auth @auth', () => {
     }
   });
 
+  it('it should fail if email or password not provided', async () => {
+    try {
+      await request()
+        .post('/api/auth/login')
+        .send();
+    } catch ({ response: res }) {
+      expect(res).to.have.status(422);
+      expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
+      expect(res.body).to.have.nested.property('errors.password.msg', 'Password field is required');
+    }
+  });
+
   it('it should fail if user not found', async () => {
     try {
       await request()
