@@ -1,4 +1,3 @@
-import JWT from 'core/jwt';
 import { schema } from 'support/helpers';
 import Controller from 'auth/controller';
 import Authenticated from 'auth/middleware';
