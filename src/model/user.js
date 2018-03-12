@@ -10,12 +10,6 @@ class User extends Model {
       required: ['name', 'email', 'password'],
     };
   }
-
-  static get relationMappings () {
-    return {
-      ...AccountRelation.relationMap(User),
-    };
-  }
 }
 
 export default User;
