@@ -29,7 +29,7 @@ class Controller {
   }
 
   get _last () {
-    const length = this._history.length;
+    const length = this._history.length - 1;
 
     return this._history[length];
   }
