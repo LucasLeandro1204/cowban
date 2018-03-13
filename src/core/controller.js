@@ -7,10 +7,14 @@ class Controller {
   }
 
   register (method, route, middleware) {
+    if (typeof middleware != 'function') {
+      throw new Error('Middleware must be a function.');
+    }
+
     this._history.push({
       route,
       method,
-      middlewares: [ this[middleware]() ],
+      middlewares: [ middleware ],
     });
 
     return this;
@@ -50,7 +54,7 @@ class Controller {
     return this.register('delete', route, middleware);
   }
 
-  any (route, middleware) {
+  all (route, middleware) {
     return this.register('all', route, middleware);
   }
 
