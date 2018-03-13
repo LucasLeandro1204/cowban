@@ -2,7 +2,7 @@ import Config from 'config';
 import Hash from 'core/hash';
 import { expect } from 'support/chai';
 
-describe('Hash @hash', () => {
+describe('Hash @core @hash', () => {
   it('rounds should be the same as in config', async () => {
     expect(Hash._rounds).to.be.equals(Config.get('hash.rounds'));
   });

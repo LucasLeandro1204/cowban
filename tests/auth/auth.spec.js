@@ -4,7 +4,7 @@ import User from 'model/user';
 import { rollback } from 'support/helpers';
 import { request, expect } from 'support/chai';
 
-describe('Auth @auth', () => {
+describe('Auth @auth @integration', () => {
   beforeEach(rollback);
 
   after(rollback);
