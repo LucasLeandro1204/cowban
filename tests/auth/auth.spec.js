@@ -7,6 +7,8 @@ import { request, expect } from 'support/chai';
 describe('Auth @auth', () => {
   beforeEach(rollback);
 
+  after(rollback);
+
   it('it should deny access', async () => {
     try {
       await request().get('/api/auth/ping');
