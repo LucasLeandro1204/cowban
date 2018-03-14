@@ -85,13 +85,15 @@ describe('Register @register @integration', () => {
   });
 
   it('should create a new user if everything is ok', async () => {
-    await request()
+    const res = await request()
       .post('/api/auth/register')
       .send({
         name: 'My foo name',
         email: 'foo@register.com',
         password: 'a long password must be secure',
       });
+
+    expect(res).to.have.status(201);
 
     const user = await User.query().findOne({
       email: 'foo@register.com',
