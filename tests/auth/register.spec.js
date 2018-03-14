@@ -79,7 +79,7 @@ describe('Register @register @integration', () => {
           password: 'not long enought to be secure',
         });
     } catch ({ response: res }) {
-      expect(res).to.have.status(422);
+      expect(res).to.have.status(401);
       expect(res.body.message).to.be.equals('Email already taken');
     }
   });
