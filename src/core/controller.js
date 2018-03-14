@@ -1,4 +1,6 @@
+import Job from 'core/job';
 import { Router } from 'express';
+import { schema } from 'support/helpers';
 
 class Controller {
   constructor () {
@@ -7,14 +9,16 @@ class Controller {
   }
 
   register (method, route, middleware) {
-    if (typeof middleware != 'function') {
-      throw new Error('Middleware must be a function.');
+    const instance = middleware instanceof Job;
+
+    if (typeof middleware != 'function' && ! instance) {
+      throw new Error('Middleware must be a function or job instance.');
     }
 
     this._history.push({
       route,
       method,
-      middlewares: [ middleware ],
+      middlewares: [ instance ? middleware.prepare() : middleware ],
     });
 
     return this;
@@ -36,6 +40,14 @@ class Controller {
     const length = this._history.length - 1;
 
     return this._history[length];
+  }
+
+  validate (object) {
+    if (typeof object != 'object') {
+      throw new Error('Validate parameter must to be an object');
+    }
+
+    return this.before(schema(object));
   }
 
   get (route, middleware) {

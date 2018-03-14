@@ -1,4 +1,5 @@
 import Controller from 'core/controller';
+import Job from 'core/job';
 import { expect, spy } from 'support/chai';
 
 describe('Controller @core @controller', () => {
@@ -17,9 +18,10 @@ describe('Controller @core @controller', () => {
     expect(controller._router.stack).to.have.lengthOf(1);
   });
 
-  it('register middleware parameter should be a function', async () => {
-    expect(controller.register.bind(controller, 'get', '/foo', 'kk')).to.throw('Middleware must be a function.');
+  it('register middleware parameter should be a function or job instance', async () => {
+    expect(controller.register.bind(controller, 'get', '/foo', 'kk')).to.throw();
     expect(controller.register.bind(controller, 'get', '/foo', () => {})).to.not.throw();
+    expect(controller.register.bind(controller, 'get', '/foo', new Job())).to.not.throw();
   });
 
   it('register should push new item to history', async () => {
@@ -53,6 +55,15 @@ describe('Controller @core @controller', () => {
 
     expect(controller._last).to.have.property('route', 'bar');
     expect(controller._last).to.have.property('method', 'post');
+  });
+
+  it('validate method parameter should be an object', async () => {
+    spy.on(controller, 'before');
+
+    controller.register('foo', 'foo', () => {});
+
+    expect(controller.validate.bind(controller, 'kk')).to.throw();
+    expect(controller.validate.bind(controller, {})).to.not.throw();
   });
 
   it('before method should add middleware to first item in history', async () => {
