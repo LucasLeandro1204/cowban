@@ -107,6 +107,7 @@ describe('Auth @auth @integration', () => {
       .get('/api/auth/ping')
       .set('Authorization', 'Bearer ' + token);
 
+
     expect(res).to.have.status(200);
     expect(res).to.have.header('token');
   });

@@ -13,6 +13,8 @@ describe('Register @register @integration', () => {
       await request()
         .post('/api/auth/register')
         .send();
+
+      expect(false, 'Request must fail').to.be.true;
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
@@ -26,26 +28,12 @@ describe('Register @register @integration', () => {
       await request()
         .post('/api/auth/register')
         .send({
-          name: 'Lucas .L',
+          name: 'Lucas @L.',
           email: 'lucas@lucas.com',
           password: 'not long enought to be secure',
         });
-    } catch ({ response: res }) {
-      expect(res).to.have.status(422);
-      expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
-    }
-  });
 
-
-  it('should fail if name contain something else than letters', async () => {
-    try {
-      await request()
-        .post('/api/auth/register')
-        .send({
-          name: 'Lucas .L',
-          email: 'lucas@lucas.com',
-          password: 'not long enought to be secure',
-        });
+      expect(false, 'Request must fail').to.be.true;
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
@@ -61,6 +49,8 @@ describe('Register @register @integration', () => {
           email: 'lucaslucas.com',
           password: 'not long enought to be secure',
         });
+
+      expect(false, 'Request must fail').to.be.true;
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
@@ -78,6 +68,8 @@ describe('Register @register @integration', () => {
           name: 'Lucas Leandro',
           password: 'not long enought to be secure',
         });
+
+      expect(false, 'Request must fail').to.be.true;
     } catch ({ response: res }) {
       expect(res).to.have.status(401);
       expect(res.body.message).to.be.equals('Email already taken');

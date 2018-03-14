@@ -1,6 +1,6 @@
 import Config from 'config';
-import User from 'model/user';
 import JWT from 'jsonwebtoken';
+import User from 'model/user';
 
 export default (user, lifetime) => {
   return JWT.sign(
