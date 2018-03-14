@@ -3,11 +3,11 @@ import Config from 'config';
 
 class Hash {
   constructor (rounds) {
-    this.rounds = rounds;
+    this._rounds = rounds;
   }
 
   async encrypt (text) {
-    return await Bcrypt.hash(text, this.rounds);
+    return await Bcrypt.hash(text, this._rounds);
   }
 
   async compare (text, hash) {

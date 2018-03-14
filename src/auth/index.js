@@ -1,11 +1,29 @@
-import JWT from 'core/jwt';
-import { Router } from 'express';
-import Controller from 'auth/controller';
+import Login from 'auth/job/login';
+import Controller from 'core/controller';
+import Authenticated from 'auth/middleware';
+import { AuthenticationError } from 'auth/errors';
 
-const router = Router();
+const controller = new Controller();
 
-router.post('/login', Controller.login());
+controller
+  .get('/ping', (req, res) => res.send('Pong!'))
+    .before(Authenticated)
+  .post('/login', Login)
+    .validate({
+      email: {
+        in: ['body'],
+        exists: true,
+        isEmail: true,
+        errorMessage: 'Email field is required and should be valid',
+      },
+      password: {
+        in: ['body'],
+        exists: true,
+        errorMessage: 'Password field is required',
+      },
+    })
+    .after((err, req, res, next) => {
+      throw new AuthenticationError;
+    });
 
-router.get('/ping', Controller.ping());
-
-export default router;
+export default controller.setup();
