@@ -14,6 +14,7 @@ describe('Register @register @integration', () => {
         .post('/api/auth/register')
         .send();
     } catch ({ response: res }) {
+
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
       expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
