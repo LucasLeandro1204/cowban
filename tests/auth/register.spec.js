@@ -1,4 +1,3 @@
-import JWT from 'core/jwt';
 import Hash from 'core/hash';
 import User from 'model/user';
 import { rollback } from 'support/helpers';
@@ -100,6 +99,8 @@ describe('Register @register @integration', () => {
 
     expect(user).to.be.not.null;
     expect(user.name).to.be.equals('My foo name');
-    expect(user.password).to.be.not.equals('a long password must be secure', 'Password must be encrypted before save');
+
+    // password must be encrypted before save.
+    expect(await Hash.compare('a long password must be secure', user.password)).to.be.true;
   });
 });
