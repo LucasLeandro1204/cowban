@@ -9,7 +9,7 @@ class Controller {
   }
 
   register (method, route, middleware) {
-    const instance = middleware instanceof Job;
+    const instance = middleware.prototype instanceof Job;
 
     if (typeof middleware != 'function' && ! instance) {
       throw new Error('Middleware must be a function or job instance.');
@@ -18,7 +18,7 @@ class Controller {
     this._history.push({
       route,
       method,
-      middlewares: [ instance ? middleware.prepare() : middleware ],
+      middlewares: [ instance ? (req, res, next) => middleware.from(req, res, next) : middleware ],
     });
 
     return this;

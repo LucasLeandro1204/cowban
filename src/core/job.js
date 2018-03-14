@@ -1,32 +1,33 @@
-import { wrap } from 'support/helpers';
-import { AssertionError } from 'assert';
-
 class Job {
-  get _async () {
-    return false;
+  constructor (asyncJob = false) {
+    this._async = asyncJob;
+  }
+
+  static instanceFromReq () {
+    throw new Error('InstanceFromReq must be overwrited.');
   }
 
   handle () {
     throw new Error('Handle must be overwrited.');
   }
 
-  prepare () {
-    if (this._async) {
-      return wrap(this.handle);
+  static async from (req, res, next) {
+    const instance = this.instanceFromReq(req, res, next);
+
+    let response;
+
+    try {
+      if (instance._async) {
+        response = await instance.handle();
+      } else {
+        response = instance.handle();
+      }
+    } catch (e) {
+      return next(e);
     }
 
-    return this.handle;
-  }
-};
-
-const Async = father => class extends father {
-  get _async () {
-    return true;
+    return instance.response(res, response);
   }
 };
 
 export default Job;
-
-export {
-  Async
-};
