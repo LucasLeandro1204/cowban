@@ -15,8 +15,6 @@ class Register extends Job {
       email: this.email,
     });
 
-    console.log(user);
-
     if (user) {
       throw new Error('Email already taken');
     }

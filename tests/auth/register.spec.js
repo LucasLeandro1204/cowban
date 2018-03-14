@@ -13,8 +13,9 @@ describe('Register @register @integration', () => {
       await request()
         .post('/api/auth/register')
         .send();
-    } catch ({ response: res }) {
 
+      expect(false, 'Request must fail').to.be.true;
+    } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
       expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
@@ -27,16 +28,16 @@ describe('Register @register @integration', () => {
       await request()
         .post('/api/auth/register')
         .send({
-          name: 'Lucas .L',
+          name: 'Lucas @L.',
           email: 'lucas@lucas.com',
           password: 'not long enought to be secure',
         });
+
+      expect(false, 'Request must fail').to.be.true;
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
     }
-
-    expect(await User.query().resultSize()).to.be.equals(1);
   });
 
   it('should fail if email is invalid', async () => {
@@ -48,6 +49,8 @@ describe('Register @register @integration', () => {
           email: 'lucaslucas.com',
           password: 'not long enought to be secure',
         });
+
+      expect(false, 'Request must fail').to.be.true;
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
@@ -65,6 +68,8 @@ describe('Register @register @integration', () => {
           name: 'Lucas Leandro',
           password: 'not long enought to be secure',
         });
+
+      expect(false, 'Request must fail').to.be.true;
     } catch ({ response: res }) {
       expect(res).to.have.status(401);
       expect(res.body.message).to.be.equals('Email already taken');

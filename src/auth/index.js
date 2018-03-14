@@ -31,7 +31,7 @@ controller
       name: {
         in: ['body'],
         exists: true,
-        //isAlpha: true,
+        matches: /^[A-Za-z\s]+$/g,
         errorMessage: 'Name field is required and should contain only letters',
       },
       email: {
