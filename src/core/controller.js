@@ -1,6 +1,7 @@
-import Job from 'core/job';
 import { Router } from 'express';
+import { wrap } from 'support/helpers';
 import { schema } from 'support/helpers';
+
 
 class Controller {
   constructor () {
@@ -9,7 +10,7 @@ class Controller {
   }
 
   register (method, route, middleware) {
-    const instance = middleware instanceof Job;
+    const instance = !! middleware.from;
 
     if (typeof middleware != 'function' && ! instance) {
       throw new Error('Middleware must be a function or job instance.');
@@ -18,7 +19,7 @@ class Controller {
     this._history.push({
       route,
       method,
-      middlewares: [ instance ? middleware.prepare() : middleware ],
+      middlewares: [ instance ? (req, res, next) => middleware.from(req, res, next) : middleware ],
     });
 
     return this;
