@@ -9,7 +9,7 @@ describe('Auth @auth @integration', () => {
 
   after(rollback);
 
-  it('it should deny access', async () => {
+  it('should deny access', async () => {
     try {
       await request().get('/api/auth/ping');
     } catch (err) {
@@ -17,7 +17,7 @@ describe('Auth @auth @integration', () => {
     }
   });
 
-  it('it should fail if email or password not provided', async () => {
+  it('should fail if email or password not provided', async () => {
     try {
       await request()
         .post('/api/auth/login')
@@ -29,7 +29,21 @@ describe('Auth @auth @integration', () => {
     }
   });
 
-  it('it should fail if user not found or password does not match', async () => {
+  it('should fail if email is not valid', async () => {
+    try {
+      await request()
+        .post('/api/auth/login')
+        .send({
+          email: 'lucas.com',
+          password: 'some random password',
+        });
+    } catch ({ response: res }) {
+      expect(res).to.have.status(422);
+      expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
+    }
+  });
+
+  it('should fail if user not found or password does not match', async () => {
     const { email } = await User.query().first();
 
     try {
@@ -57,7 +71,7 @@ describe('Auth @auth @integration', () => {
     }
   });
 
-  it('it should pass if found user and password match', async () => {
+  it('should pass if found user and password match', async () => {
     const user = await User.query().insert({
       name: 'Foo bar',
       email: 'foo@bar.com',
@@ -75,7 +89,7 @@ describe('Auth @auth @integration', () => {
     expect(res.body).to.have.property('token');
   });
 
-  it('it should deny access if an invalid token is provided', async () => {
+  it('should deny access if an invalid token is provided', async () => {
     try {
       await request()
         .get('/api/auth/ping')
@@ -85,7 +99,7 @@ describe('Auth @auth @integration', () => {
     }
   });
 
-  it('it should allow access if a valid token is provided', async () => {
+  it('should allow access if a valid token is provided', async () => {
     const user = await User.query().first();
     const token = JWT(user);
 
