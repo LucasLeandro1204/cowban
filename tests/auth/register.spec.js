@@ -35,22 +35,8 @@ describe('Register @register @integration', () => {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
     }
-  });
 
-
-  it('should fail if name contain something else than letters', async () => {
-    try {
-      await request()
-        .post('/api/auth/register')
-        .send({
-          name: 'Lucas .L',
-          email: 'lucas@lucas.com',
-          password: 'not long enought to be secure',
-        });
-    } catch ({ response: res }) {
-      expect(res).to.have.status(422);
-      expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
-    }
+    expect(await User.query().count()).to.be.equals(1);
   });
 
   it('should fail if email is invalid', async () => {
