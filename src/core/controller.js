@@ -1,7 +1,6 @@
+import Job from 'core/job';
 import { Router } from 'express';
-import { wrap } from 'support/helpers';
 import { schema } from 'support/helpers';
-
 
 class Controller {
   constructor () {
@@ -10,7 +9,7 @@ class Controller {
   }
 
   register (method, route, middleware) {
-    const instance = !! middleware.from;
+    const instance = middleware.prototype instanceof Job;
 
     if (typeof middleware != 'function' && ! instance) {
       throw new Error('Middleware must be a function or job instance.');

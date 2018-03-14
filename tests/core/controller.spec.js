@@ -21,7 +21,7 @@ describe('Controller @core @controller', () => {
   it('register middleware parameter should be a function or job instance', async () => {
     expect(controller.register.bind(controller, 'get', '/foo', 'kk')).to.throw();
     expect(controller.register.bind(controller, 'get', '/foo', () => {})).to.not.throw();
-    expect(controller.register.bind(controller, 'get', '/foo', new Job())).to.not.throw();
+    expect(controller.register.bind(controller, 'get', '/foo', Job)).to.not.throw();
   });
 
   it('register should push new item to history', async () => {
