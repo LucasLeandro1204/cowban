@@ -11,6 +11,16 @@ class Register extends Job {
   }
 
   async handle () {
+    const user = await User.query().findOne({
+      email: this.email,
+    });
+
+    console.log(user);
+
+    if (user) {
+      throw new Error('Email already taken');
+    }
+
     await User.query().insert({
       name: this.name,
       email: this.email,

@@ -31,6 +31,7 @@ controller
       name: {
         in: ['body'],
         exists: true,
+        //isAlpha: true,
         errorMessage: 'Name field is required and should contain only letters',
       },
       email: {

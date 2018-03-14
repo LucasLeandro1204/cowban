@@ -36,7 +36,7 @@ describe('Register @register @integration', () => {
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
     }
 
-    expect(await User.query().count()).to.be.equals(1);
+    expect(await User.query().resultSize()).to.be.equals(1);
   });
 
   it('should fail if email is invalid', async () => {
