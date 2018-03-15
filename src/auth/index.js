@@ -19,7 +19,6 @@ controller
   .post('/register', Register)
     .validate(RegisterValidation)
     .after((err, req, res, next) => {
-      console.log('buceta');
       throw new EmailAlreadyTaken;
     });
 
