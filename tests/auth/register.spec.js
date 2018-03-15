@@ -57,7 +57,7 @@ describe('Register @register @integration', () => {
     }
   });
 
-  it('should fail if email exists', async () => {
+  it('should fail if email already taken', async () => {
     const user = await User.query().first();
 
     try {
