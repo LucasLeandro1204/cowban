@@ -1,6 +1,7 @@
 import Job from 'core/job';
 import { Router } from 'express';
 import { schema } from 'support/helpers';
+import Validation from 'core/validation';
 
 class Controller {
   constructor () {
@@ -18,7 +19,8 @@ class Controller {
     this._history.push({
       route,
       method,
-      middlewares: [ instance ? (req, res, next) => middleware.from(req, res, next) : middleware ],
+      rules: [],
+      middlewares: [ instance ? (...args) => middleware.from(...args) : middleware ],
     });
 
     return this;
@@ -42,12 +44,14 @@ class Controller {
     return this._history[length];
   }
 
-  validate (object) {
-    if (typeof object != 'object') {
-      throw new Error('Validate parameter must to be an object');
+  validate (Validate) {
+    if (! (Validate.prototype instanceof Validation)) {
+      throw new Error('Validate parameter must be an Validation instance');
     }
 
-    return this.before(schema(object));
+    this._last.rules = (new Validate()).setup();
+
+    return this;
   }
 
   get (route, middleware) {
@@ -71,8 +75,8 @@ class Controller {
   }
 
   setup () {
-    this._history.forEach(({ method, route, middlewares }) => {
-      this._router[method](route, ...middlewares);
+    this._history.forEach(({ method, rules, route, middlewares }) => {
+      this._router[method](route, ...rules, ...middlewares);
     });
 
     return this._router;
