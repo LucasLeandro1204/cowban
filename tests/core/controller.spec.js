@@ -1,5 +1,6 @@
-import Controller from 'core/controller';
 import Job from 'core/job';
+import Controller from 'core/controller';
+import Validation from 'core/validation';
 import { expect, spy } from 'support/chai';
 
 describe('Controller @core @controller', () => {
@@ -57,13 +58,15 @@ describe('Controller @core @controller', () => {
     expect(controller._last).to.have.property('method', 'post');
   });
 
-  it('validate method parameter should be an object', async () => {
-    spy.on(controller, 'before');
-
+  it('validate method parameter should be an Validation instance', async () => {
     controller.register('foo', 'foo', () => {});
 
     expect(controller.validate.bind(controller, 'kk')).to.throw();
-    expect(controller.validate.bind(controller, {})).to.not.throw();
+    expect(controller.validate.bind(controller, class extends Validation {
+      rules () {
+        return [];
+      }
+    })).to.not.throw();
   });
 
   it('before method should add middleware to first item in history', async () => {
