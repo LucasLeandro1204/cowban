@@ -1,11 +1,12 @@
 import Validation from 'core/validation';
+import isAlpha from 'validator/lib/isAlpha';
 
 class Register extends Validation {
   rules () {
     return [
       this.body('name', 'Name field is required and should contain only letters')
         .exists()
-        .matches(/^[A-Za-z\s]+$/g)
+        .custom(str => str.split(' ').filter(s => ! isAlpha(s)).length == 0)
         .trim(),
       this.body('email', 'Email field is required and should be valid')
         .exists()
