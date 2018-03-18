@@ -79,11 +79,11 @@ describe('Auth @auth @integration', () => {
     });
 
     const res = await request()
-    .post('/api/auth/login')
-    .send({
-      email: 'foo@bar.com',
-      password: 'foo123',
-    });
+      .post('/api/auth/login')
+      .send({
+        email: 'foo@bar.com',
+        password: 'foo123',
+      });
 
     expect(res).to.have.status(200);
     expect(res.body).to.have.property('token');
@@ -106,7 +106,6 @@ describe('Auth @auth @integration', () => {
     const res = await request()
       .get('/api/auth/ping')
       .set('Authorization', 'Bearer ' + token);
-
 
     expect(res).to.have.status(200);
     expect(res).to.have.header('token');
