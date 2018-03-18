@@ -9,10 +9,16 @@ Chai.use(ChaiHttp);
 const spy = Chai.spy;
 const expect = Chai.expect;
 const request = Chai.request.bind(Chai, Server);
+const fail = async req => {
+  await req;
+
+  throw new Error('Request must fail.');
+};
 
 export {
   spy,
   Chai,
+  fail,
   expect,
   request,
 };
