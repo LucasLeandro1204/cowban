@@ -6,7 +6,10 @@ const rollback = (done = () => {}) => (
 
 const wrap = fn => (req, res, next) => fn(req, res, next).catch(next);
 
+const authorizeRequest = token => async request => request.set('Authorization', 'Bearer ' + token);
+
 export {
   wrap,
   rollback,
+  authorizeRequest,
 };
