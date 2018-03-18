@@ -1,7 +1,7 @@
 import Hash from 'core/hash';
 import User from 'model/user';
 import { rollback } from 'support/helpers';
-import { request, expect } from 'support/chai';
+import { request, expect, fail } from 'support/chai';
 
 describe('Register @register @integration', () => {
   beforeEach(rollback);
@@ -10,11 +10,9 @@ describe('Register @register @integration', () => {
 
   it('should fail if name, password or email not provided', async () => {
     try {
-      await request()
+      await fail(request()
         .post('/api/auth/register')
-        .send();
-
-      expect(false, 'Request must fail').to.be.true;
+        .send());
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
@@ -25,15 +23,13 @@ describe('Register @register @integration', () => {
 
   it('should fail if name contain something else than letters', async () => {
     try {
-      await request()
+      await fail(request()
         .post('/api/auth/register')
         .send({
           name: 'Lucas @L.',
           email: 'lucas@lucas.com',
           password: 'not long enought to be secure',
-        });
-
-      expect(false, 'Request must fail').to.be.true;
+        }));
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.name.msg', 'Name field is required and should contain only letters');
@@ -42,15 +38,13 @@ describe('Register @register @integration', () => {
 
   it('should fail if email is invalid', async () => {
     try {
-      await request()
+      await fail(request()
         .post('/api/auth/register')
         .send({
           name: 'Lucas Leandro',
           email: 'lucaslucas.com',
           password: 'not long enought to be secure',
-        });
-
-      expect(false, 'Request must fail').to.be.true;
+        }));
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
@@ -61,15 +55,13 @@ describe('Register @register @integration', () => {
     const user = await User.query().first();
 
     try {
-      await request()
+      await fail(request()
         .post('/api/auth/register')
         .send({
           email: user.email,
           name: 'Lucas Leandro',
           password: 'not long enought to be secure',
-        });
-
-      expect(false, 'Request must fail').to.be.true;
+        }));
     } catch ({ response: res }) {
       expect(res).to.have.status(401);
       expect(res.body.message).to.be.equals('Email already taken');
