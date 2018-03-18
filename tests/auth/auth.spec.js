@@ -2,7 +2,7 @@ import JWT from 'core/jwt';
 import Hash from 'core/hash';
 import User from 'model/user';
 import { rollback } from 'support/helpers';
-import { request, expect } from 'support/chai';
+import { request, expect, fail } from 'support/chai';
 
 describe('Auth @auth @integration', () => {
   beforeEach(rollback);
@@ -11,7 +11,7 @@ describe('Auth @auth @integration', () => {
 
   it('should deny access', async () => {
     try {
-      await request().get('/api/auth/ping');
+      await fail(request().get('/api/auth/ping'));
     } catch (err) {
       expect(err).to.have.status(401);
     }
@@ -19,9 +19,9 @@ describe('Auth @auth @integration', () => {
 
   it('should fail if email or password not provided', async () => {
     try {
-      await request()
+      await fail(request()
         .post('/api/auth/login')
-        .send();
+        .send());
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
@@ -31,12 +31,12 @@ describe('Auth @auth @integration', () => {
 
   it('should fail if email is not valid', async () => {
     try {
-      await request()
+      await fail(request()
         .post('/api/auth/login')
         .send({
           email: 'lucas.com',
           password: 'some random password',
-        });
+        }));
     } catch ({ response: res }) {
       expect(res).to.have.status(422);
       expect(res.body).to.have.nested.property('errors.email.msg', 'Email field is required and should be valid');
@@ -47,24 +47,24 @@ describe('Auth @auth @integration', () => {
     const { email } = await User.query().first();
 
     try {
-      await request()
+      await fail(request()
         .post('/api/auth/login')
         .send({
           email: 'foo@foo.com',
           password: 'foo123',
-        });
+        }));
     } catch ({ response: res }) {
       expect(res).to.have.status(401);
       expect(res.body.message).to.be.equals('User not found or password does not match');
     }
 
     try {
-      await request()
+      await fail(request()
         .post('/api/auth/login')
         .send({
           email,
           password: 'foo123',
-        });
+        }));
     } catch ({ response: res }) {
       expect(res).to.have.status(401);
       expect(res.body.message).to.be.equals('User not found or password does not match');
@@ -91,9 +91,9 @@ describe('Auth @auth @integration', () => {
 
   it('should deny access if an invalid token is provided', async () => {
     try {
-      await request()
+      await fail(request()
         .get('/api/auth/ping')
-        .set('Authorization', 'Bearer foobarbaz');
+        .set('Authorization', 'Bearer foobarbaz'));
     } catch (err) {
       expect(err).to.have.status(401);
     }
