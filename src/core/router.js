@@ -9,7 +9,7 @@ class Router {
   constructor () {
     this._childs = [];
     this._routes = [];
-    this._prefix = '';
+    this._prefix = '/';
     this._middlewares = [];
     this._authorization = null;
   }
@@ -27,7 +27,7 @@ class Router {
 
     this._routes.push({
       method,
-      route: this._prefix + route,
+      route,
       before: [],
       validate: null,
       authorize: null,
@@ -138,6 +138,9 @@ class Router {
 
   build () {
     const router = Express.Router();
+    const prefix = Express.Router();
+
+    prefix.use(this._prefix, router);
 
     if (this._middlewares.length !== 0) {
       router.use(this._middlewares);
@@ -161,9 +164,9 @@ class Router {
       }));
     });
 
-    this._childs.forEach(child => router.use(this._prefix, child));
+    this._childs.forEach(child => router.use(child));
 
-    return router;
+    return prefix;
   }
 };
 
