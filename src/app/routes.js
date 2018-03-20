@@ -1,12 +1,9 @@
 import Auth from 'auth';
-import { Router } from 'express';
+import Router from 'core/router';
 
-const router = Router();
+const router = new Router();
 
-router.get('/api/ping', (req, res) => {
-  res.send('Pong!');
-});
-
-router.use('/api/auth', Auth);
-
-export default router;
+export default router.prefix('/api')
+  .get('/pong', (req, res) => res.send('Pong!'))
+  .use(Auth)
+  .build();

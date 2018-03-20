@@ -15,8 +15,10 @@ class Validation {
     return body;
   }
 
-  setup () {
-    return [ this.rules(), this.after() ];
+  static build () {
+    const instance = new this();
+
+    return [ instance.rules(), instance.after() ];
   }
 
   after () {
