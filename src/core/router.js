@@ -151,17 +151,10 @@ class Router {
 
       Reflect.deleteProperty(route, 'method');
 
-      router[method](...Object.values(route).filter((prop) => {
-        if (prop === null) {
-          return false;
-        }
-
-        if (Array.isArray(prop) && prop.length === 0) {
-          return false;
-        }
-
-        return true;
-      }));
+      router[method](
+        ...Object.values(route)
+          .filter(prop => prop !== null)
+      );
     });
 
     this._childs.forEach(child => router.use(child));
