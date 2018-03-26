@@ -1,8 +1,10 @@
 exports.up = knex => (
   knex.schema.createTable('board_user', (table) => {
   	table.increments('id').primary();
-  	table.foreign('board_id').reference('boards.id');
-  	table.foreign('user_id').reference('users.id');
+  	table.integer('board_id').unsigned();
+  	table.integer('user_id').unsigned();
+  	table.foreign('board_id').references('boards.id');
+  	table.foreign('user_id').references('users.id');
   	table.boolean('admin').defaultTo(false);
   })
 );
